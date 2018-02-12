@@ -1,3 +1,12 @@
+3 points:
+1 - More than 80% of players male
+2 - Though males do spend more (because there are more obviously), females spend more on average
+3 - 14-26 year olds spent the most, but 34-38 year olds spent the most on average
+4 - Jiskjask76 is the closest thing this game has to a whale
+5 - Items with dramatic sounding names seem to be more popular
+
+
+
 
 
 ```python
