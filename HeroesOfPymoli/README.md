@@ -1,4 +1,4 @@
-'''
+'''python
 3 points:
 1 - More than 80% of players male
 2 - Though males do spend more (because there are more obviously), females spend more on average
