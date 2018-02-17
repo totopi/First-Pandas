@@ -1,4 +1,10 @@
 
+3 Trends Observed:
+1 - Go to a charter school if you want to pass reading and do better in math.
+2 - Having more students is a good way to lessen their chances of success.
+3 - Higher per student spending leads to lower passing rates.
+4 - Incidentally, charter schools all have fewer students and lower per student spending.
+
 
 ```python
 # Dependencies
@@ -10,168 +16,13 @@ import pandas as pd
 # Import files with pandas
 school_df = pd.read_csv("generated_data/schools_complete.csv")
 student_df = pd.read_csv("generated_data/students_complete.csv")
-
-# Output headers for my use
-school_df.head(1)
 ```
-
-
-
-
-<div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>School ID</th>
-      <th>school_name</th>
-      <th>type</th>
-      <th>size</th>
-      <th>budget</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>Miller High School</td>
-      <td>Charter</td>
-      <td>2424</td>
-      <td>1418040</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-```python
-# Output headers for my use
-student_df.head(1)
-```
-
-
-
-
-<div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Student ID</th>
-      <th>student_name</th>
-      <th>gender</th>
-      <th>grade</th>
-      <th>school_name</th>
-      <th>reading_score</th>
-      <th>math_score</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>April Miller</td>
-      <td>F</td>
-      <td>9th</td>
-      <td>Miller High School</td>
-      <td>99</td>
-      <td>92</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 
 ```python
 # Make a combined dataframe for later
 district_df = pd.merge(student_df, school_df, on="school_name")
-district_df.head(1)
 ```
-
-
-
-
-<div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Student ID</th>
-      <th>student_name</th>
-      <th>gender</th>
-      <th>grade</th>
-      <th>school_name</th>
-      <th>reading_score</th>
-      <th>math_score</th>
-      <th>School ID</th>
-      <th>type</th>
-      <th>size</th>
-      <th>budget</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>April Miller</td>
-      <td>F</td>
-      <td>9th</td>
-      <td>Miller High School</td>
-      <td>99</td>
-      <td>92</td>
-      <td>0</td>
-      <td>Charter</td>
-      <td>2424</td>
-      <td>1418040</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 DISTRICT SUMMARY
 
@@ -195,11 +46,11 @@ math_average = student_df["math_score"].mean()
 reading_average = student_df["reading_score"].mean()
 
 # - % Passing Math
-math_passing = student_df["math_score"][student_df["math_score"] >= 60].count()
+math_passing = student_df["math_score"][student_df["math_score"] >= 70].count()
 math_passing = (math_passing / student_total) * 100
 
 # - % Passing Reading
-reading_passing = student_df["reading_score"][student_df["reading_score"] >= 60].count()
+reading_passing = student_df["reading_score"][student_df["reading_score"] >= 70].count()
 reading_passing = (reading_passing / student_total) * 100
 
 # - Overall Passing Rate (Average of the above two)
@@ -230,19 +81,6 @@ district_summary_table
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -265,9 +103,9 @@ district_summary_table
       <td>$18,648,468</td>
       <td>82.269846</td>
       <td>82.865877</td>
-      <td>100.0</td>
-      <td>92.766204</td>
-      <td>96.383102</td>
+      <td>86.856618</td>
+      <td>78.220316</td>
+      <td>82.538467</td>
     </tr>
   </tbody>
 </table>
@@ -293,7 +131,7 @@ school_type = school_type.str.replace("]", "")
 school_type = school_type.str.replace("'", "")
 
 # - Total Students
-school_students = school_group["student_name"].count()
+school_students = school_group["size"].count()
 
 # - Total School Budget
 school_budget = school_df.groupby("school_name")
@@ -310,13 +148,13 @@ school_reading_average = school_group["reading_score"].mean()
 
 # - % Passing Math
 school_index = district_df.set_index("school_name")
-math_pass = school_index["math_score"].loc[school_index.math_score >= 60]
+math_pass = school_index["math_score"].loc[school_index.math_score >= 70]
 math_pass = pd.DataFrame(math_pass).reset_index().groupby("school_name").count()
 math_pass = pd.to_numeric(math_pass["math_score"])
 math_pass = ((math_pass / school_students) * 100)
 
 # - % Passing Reading
-reading_pass = school_index["reading_score"].loc[school_index.reading_score >= 60]
+reading_pass = school_index["reading_score"].loc[school_index.reading_score >= 70]
 reading_pass = pd.DataFrame(reading_pass).reset_index().groupby("school_name").count()
 reading_pass = pd.to_numeric(reading_pass["reading_score"])
 reading_pass = ((reading_pass / school_students) * 100)
@@ -356,19 +194,6 @@ school_summary_table
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -405,9 +230,9 @@ school_summary_table
       <td>$583.0</td>
       <td>83.594096</td>
       <td>93.771218</td>
-      <td>100.0</td>
+      <td>95.202952</td>
       <td>100.000000</td>
-      <td>100.000000</td>
+      <td>97.601476</td>
     </tr>
     <tr>
       <th>Galloway High School</th>
@@ -417,9 +242,9 @@ school_summary_table
       <td>$585.0</td>
       <td>83.566168</td>
       <td>94.029543</td>
-      <td>100.0</td>
+      <td>94.212869</td>
       <td>100.000000</td>
-      <td>100.000000</td>
+      <td>97.106435</td>
     </tr>
     <tr>
       <th>Glass High School</th>
@@ -429,9 +254,9 @@ school_summary_table
       <td>$659.0</td>
       <td>81.293183</td>
       <td>76.888108</td>
-      <td>100.0</td>
-      <td>88.719046</td>
-      <td>94.359523</td>
+      <td>82.329563</td>
+      <td>67.349434</td>
+      <td>74.839499</td>
     </tr>
     <tr>
       <th>Gomez High School</th>
@@ -441,9 +266,9 @@ school_summary_table
       <td>$598.0</td>
       <td>83.838440</td>
       <td>94.027391</td>
-      <td>100.0</td>
+      <td>93.964717</td>
       <td>100.000000</td>
-      <td>100.000000</td>
+      <td>96.982358</td>
     </tr>
     <tr>
       <th>Gonzalez High School</th>
@@ -453,9 +278,9 @@ school_summary_table
       <td>$643.0</td>
       <td>83.442588</td>
       <td>94.140701</td>
-      <td>100.0</td>
+      <td>93.207547</td>
       <td>100.000000</td>
-      <td>100.000000</td>
+      <td>96.603774</td>
     </tr>
     <tr>
       <th>Hawkins High School</th>
@@ -465,9 +290,9 @@ school_summary_table
       <td>$626.0</td>
       <td>81.723820</td>
       <td>77.005928</td>
-      <td>100.0</td>
-      <td>88.715697</td>
-      <td>94.357849</td>
+      <td>83.907794</td>
+      <td>66.915477</td>
+      <td>75.411636</td>
     </tr>
     <tr>
       <th>Kelly High School</th>
@@ -477,9 +302,9 @@ school_summary_table
       <td>$673.0</td>
       <td>81.678258</td>
       <td>76.829755</td>
-      <td>100.0</td>
-      <td>88.751134</td>
-      <td>94.375567</td>
+      <td>83.398851</td>
+      <td>66.555791</td>
+      <td>74.977321</td>
     </tr>
     <tr>
       <th>Macdonald High School</th>
@@ -489,9 +314,9 @@ school_summary_table
       <td>$611.0</td>
       <td>83.779134</td>
       <td>93.932297</td>
-      <td>100.0</td>
+      <td>94.339623</td>
       <td>100.000000</td>
-      <td>100.000000</td>
+      <td>97.169811</td>
     </tr>
     <tr>
       <th>Miller High School</th>
@@ -501,9 +326,9 @@ school_summary_table
       <td>$585.0</td>
       <td>83.610149</td>
       <td>93.997525</td>
-      <td>100.0</td>
+      <td>93.564356</td>
       <td>100.000000</td>
-      <td>100.000000</td>
+      <td>96.782178</td>
     </tr>
     <tr>
       <th>Sherman High School</th>
@@ -513,9 +338,9 @@ school_summary_table
       <td>$670.0</td>
       <td>81.502023</td>
       <td>77.290694</td>
-      <td>100.0</td>
-      <td>89.449113</td>
-      <td>94.724556</td>
+      <td>82.944289</td>
+      <td>67.289138</td>
+      <td>75.116713</td>
     </tr>
     <tr>
       <th>Smith High School</th>
@@ -525,9 +350,9 @@ school_summary_table
       <td>$648.0</td>
       <td>81.539160</td>
       <td>77.146952</td>
-      <td>100.0</td>
-      <td>89.281389</td>
-      <td>94.640694</td>
+      <td>83.165119</td>
+      <td>66.370610</td>
+      <td>74.767864</td>
     </tr>
   </tbody>
 </table>
@@ -562,19 +387,6 @@ top_performing_school.head(5)
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -611,45 +423,9 @@ top_performing_school.head(5)
       <td>$583.0</td>
       <td>83.594096</td>
       <td>93.771218</td>
+      <td>95.202952</td>
       <td>100.0</td>
-      <td>100.0</td>
-      <td>100.0</td>
-    </tr>
-    <tr>
-      <th>Galloway High School</th>
-      <td>Charter</td>
-      <td>2,471</td>
-      <td>$1,445,535</td>
-      <td>$585.0</td>
-      <td>83.566168</td>
-      <td>94.029543</td>
-      <td>100.0</td>
-      <td>100.0</td>
-      <td>100.0</td>
-    </tr>
-    <tr>
-      <th>Gomez High School</th>
-      <td>Charter</td>
-      <td>2,154</td>
-      <td>$1,288,092</td>
-      <td>$598.0</td>
-      <td>83.838440</td>
-      <td>94.027391</td>
-      <td>100.0</td>
-      <td>100.0</td>
-      <td>100.0</td>
-    </tr>
-    <tr>
-      <th>Gonzalez High School</th>
-      <td>Charter</td>
-      <td>1,855</td>
-      <td>$1,192,765</td>
-      <td>$643.0</td>
-      <td>83.442588</td>
-      <td>94.140701</td>
-      <td>100.0</td>
-      <td>100.0</td>
-      <td>100.0</td>
+      <td>97.601476</td>
     </tr>
     <tr>
       <th>Macdonald High School</th>
@@ -659,9 +435,45 @@ top_performing_school.head(5)
       <td>$611.0</td>
       <td>83.779134</td>
       <td>93.932297</td>
+      <td>94.339623</td>
       <td>100.0</td>
+      <td>97.169811</td>
+    </tr>
+    <tr>
+      <th>Galloway High School</th>
+      <td>Charter</td>
+      <td>2,471</td>
+      <td>$1,445,535</td>
+      <td>$585.0</td>
+      <td>83.566168</td>
+      <td>94.029543</td>
+      <td>94.212869</td>
       <td>100.0</td>
+      <td>97.106435</td>
+    </tr>
+    <tr>
+      <th>Gomez High School</th>
+      <td>Charter</td>
+      <td>2,154</td>
+      <td>$1,288,092</td>
+      <td>$598.0</td>
+      <td>83.838440</td>
+      <td>94.027391</td>
+      <td>93.964717</td>
       <td>100.0</td>
+      <td>96.982358</td>
+    </tr>
+    <tr>
+      <th>Miller High School</th>
+      <td>Charter</td>
+      <td>2,424</td>
+      <td>$1,418,040</td>
+      <td>$585.0</td>
+      <td>83.610149</td>
+      <td>93.997525</td>
+      <td>93.564356</td>
+      <td>100.0</td>
+      <td>96.782178</td>
     </tr>
   </tbody>
 </table>
@@ -684,19 +496,6 @@ bottom_performing_school.head(5)
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -726,16 +525,16 @@ bottom_performing_school.head(5)
   </thead>
   <tbody>
     <tr>
-      <th>Hawkins High School</th>
+      <th>Smith High School</th>
       <td>District</td>
-      <td>4,555</td>
-      <td>$2,851,430</td>
-      <td>$626.0</td>
-      <td>81.723820</td>
-      <td>77.005928</td>
-      <td>100.0</td>
-      <td>88.715697</td>
-      <td>94.357849</td>
+      <td>4,954</td>
+      <td>$3,210,192</td>
+      <td>$648.0</td>
+      <td>81.539160</td>
+      <td>77.146952</td>
+      <td>83.165119</td>
+      <td>66.370610</td>
+      <td>74.767864</td>
     </tr>
     <tr>
       <th>Glass High School</th>
@@ -745,9 +544,9 @@ bottom_performing_school.head(5)
       <td>$659.0</td>
       <td>81.293183</td>
       <td>76.888108</td>
-      <td>100.0</td>
-      <td>88.719046</td>
-      <td>94.359523</td>
+      <td>82.329563</td>
+      <td>67.349434</td>
+      <td>74.839499</td>
     </tr>
     <tr>
       <th>Kelly High School</th>
@@ -757,21 +556,9 @@ bottom_performing_school.head(5)
       <td>$673.0</td>
       <td>81.678258</td>
       <td>76.829755</td>
-      <td>100.0</td>
-      <td>88.751134</td>
-      <td>94.375567</td>
-    </tr>
-    <tr>
-      <th>Smith High School</th>
-      <td>District</td>
-      <td>4,954</td>
-      <td>$3,210,192</td>
-      <td>$648.0</td>
-      <td>81.539160</td>
-      <td>77.146952</td>
-      <td>100.0</td>
-      <td>89.281389</td>
-      <td>94.640694</td>
+      <td>83.398851</td>
+      <td>66.555791</td>
+      <td>74.977321</td>
     </tr>
     <tr>
       <th>Sherman High School</th>
@@ -781,9 +568,21 @@ bottom_performing_school.head(5)
       <td>$670.0</td>
       <td>81.502023</td>
       <td>77.290694</td>
-      <td>100.0</td>
-      <td>89.449113</td>
-      <td>94.724556</td>
+      <td>82.944289</td>
+      <td>67.289138</td>
+      <td>75.116713</td>
+    </tr>
+    <tr>
+      <th>Hawkins High School</th>
+      <td>District</td>
+      <td>4,555</td>
+      <td>$2,851,430</td>
+      <td>$626.0</td>
+      <td>81.723820</td>
+      <td>77.005928</td>
+      <td>83.907794</td>
+      <td>66.915477</td>
+      <td>75.411636</td>
     </tr>
   </tbody>
 </table>
@@ -811,19 +610,6 @@ math_by_grade
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -945,19 +731,6 @@ reading_by_grade
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1073,8 +846,8 @@ SCORES BY SCHOOL SPENDING
 # - Overall Passing Rate (Average of the above two)
 scores_by_spending = school_summary_table
 scores_by_spending["Per Student Budget"] = per_student_budget
-bins = [0, 590, 620, 650, 1000]
-bin_names = ["<$590", "$590-620", "$620-650", "$650+"]
+bins = [0, 600, 630, 660, 1000]
+bin_names = ["<$600", "$600-630", "$630-660", "$660+"]
 scores_by_spending["Spending Ranges (Per Student)"] = pd.cut(scores_by_spending["Per Student Budget"], bins, labels=bin_names)
 scores_by_spending = scores_by_spending.reset_index()
 scores_by_spending = scores_by_spending.groupby("Spending Ranges (Per Student)")
@@ -1086,19 +859,6 @@ scores_by_spending.mean()
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1120,36 +880,36 @@ scores_by_spending.mean()
   </thead>
   <tbody>
     <tr>
-      <th>&lt;$590</th>
-      <td>83.590137</td>
-      <td>93.932762</td>
-      <td>100.0</td>
+      <th>&lt;$600</th>
+      <td>83.652213</td>
+      <td>93.956419</td>
+      <td>94.236224</td>
       <td>100.000000</td>
-      <td>100.000000</td>
+      <td>97.118112</td>
     </tr>
     <tr>
-      <th>$590-620</th>
-      <td>83.808787</td>
-      <td>93.979844</td>
-      <td>100.0</td>
-      <td>100.000000</td>
-      <td>100.000000</td>
+      <th>$600-630</th>
+      <td>82.751477</td>
+      <td>85.469112</td>
+      <td>89.123708</td>
+      <td>83.457739</td>
+      <td>86.290723</td>
     </tr>
     <tr>
-      <th>$620-650</th>
-      <td>82.235189</td>
-      <td>82.764527</td>
-      <td>100.0</td>
-      <td>92.665695</td>
-      <td>96.332848</td>
+      <th>$630-660</th>
+      <td>82.091643</td>
+      <td>82.725253</td>
+      <td>86.234076</td>
+      <td>77.906681</td>
+      <td>82.070379</td>
     </tr>
     <tr>
-      <th>$650+</th>
-      <td>81.491155</td>
-      <td>77.002852</td>
-      <td>100.0</td>
-      <td>88.973098</td>
-      <td>94.486549</td>
+      <th>$660+</th>
+      <td>81.590141</td>
+      <td>77.060225</td>
+      <td>83.171570</td>
+      <td>66.922464</td>
+      <td>75.047017</td>
     </tr>
   </tbody>
 </table>
@@ -1164,11 +924,10 @@ scores_by_spending.mean()
 school_size = district_df.groupby("school_name")
 school_size = school_size["student_name"].count()
 
-bins = [0, 1000, 2500, 5000]
-bin_names = ["Small (<1000)", "Medium (1000-2500)", "Large (2500-5000)"]
+bins = [0, 1000, 2000, 5000]
+bin_names = ["Small (<1000)", "Medium (1000-2000)", "Large (2000-5000)"]
 scores_by_size = school_summary_table
 scores_by_size["School Size"] = pd.cut(school_size, bins, labels=bin_names)
-scores_by_size = school_summary_table.reset_index()
 scores_by_size = scores_by_size.groupby("School Size")
 scores_by_size = scores_by_size[["Average Math Score", "Average Reading Score", "% Passing Math", "% Passing Reading", "% Overall Passing Rate"]]
 scores_by_size.mean()
@@ -1178,19 +937,6 @@ scores_by_size.mean()
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1215,25 +961,25 @@ scores_by_size.mean()
       <th>Small (&lt;1000)</th>
       <td>83.686615</td>
       <td>93.851758</td>
-      <td>100.0</td>
+      <td>94.771287</td>
       <td>100.000000</td>
-      <td>100.000000</td>
+      <td>97.385644</td>
     </tr>
     <tr>
-      <th>Medium (1000-2500)</th>
-      <td>83.614336</td>
-      <td>94.048790</td>
-      <td>100.0</td>
+      <th>Medium (1000-2000)</th>
+      <td>83.442588</td>
+      <td>94.140701</td>
+      <td>93.207547</td>
       <td>100.000000</td>
-      <td>100.000000</td>
+      <td>96.603774</td>
     </tr>
     <tr>
-      <th>Large (2500-5000)</th>
-      <td>81.547289</td>
-      <td>77.032287</td>
-      <td>100.0</td>
-      <td>88.983276</td>
-      <td>94.491638</td>
+      <th>Large (2000-5000)</th>
+      <td>82.343900</td>
+      <td>83.401987</td>
+      <td>87.185945</td>
+      <td>79.310056</td>
+      <td>83.248000</td>
     </tr>
   </tbody>
 </table>
@@ -1255,19 +1001,6 @@ score_by_type.mean()
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1292,17 +1025,17 @@ score_by_type.mean()
       <th>Charter</th>
       <td>83.638429</td>
       <td>93.983112</td>
-      <td>100.0</td>
-      <td>100.000000</td>
-      <td>100.000000</td>
+      <td>94.082011</td>
+      <td>100.00000</td>
+      <td>97.041005</td>
     </tr>
     <tr>
       <th>District</th>
       <td>81.547289</td>
       <td>77.032287</td>
-      <td>100.0</td>
-      <td>88.983276</td>
-      <td>94.491638</td>
+      <td>83.149123</td>
+      <td>66.89609</td>
+      <td>75.022607</td>
     </tr>
   </tbody>
 </table>
